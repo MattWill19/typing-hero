@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080d1c" />
+    <meta
+      name="description"
+      content="A typing rhythm game built to make every keystroke count."
+    />
+    <title>Typing Hero | Find your flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell neon-arcade">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Typing Hero home">
+          <span class="brand-mark" aria-hidden="true"
+            ><span></span><span></span><span></span
+          ></span>
+          <span class="brand-name">TYPING<span>HERO</span></span>
+        </a>
+        <div class="topbar-right">
+          <span class="season-label"
+            ><span class="live-dot"></span> SEASON 01
+            <span class="season-divider">/</span> OPEN MIC</span
+          >
+          <button
+            class="profile-button"
+            id="profile-button"
+            type="button"
+            aria-label="Sign in or edit profile"
+          >
+            <span class="profile-avatar" id="header-avatar">G</span>
+            <span class="profile-button-copy"
+              ><strong id="header-name">PLAYER ONE</strong
+              ><small id="header-status">LOCAL PROFILE</small></span
+            >
+            <span class="profile-chevron" aria-hidden="true">⌄</span>
+          </button>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="intro-row" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">
+              <span class="eyebrow-line"></span> THE STAGE IS YOURS
+            </p>
+            <h1 id="page-title">FIND YOUR <span>FLOW.</span></h1>
+            <p class="intro-copy">
+              Words on the beat. Fingers in the zone. Every run makes you
+              sharper.
+            </p>
+          </div>
+          <button
+            class="daily-chip"
+            id="daily-chip"
+            type="button"
+            aria-label="View today's Daily Mix challenge"
+          >
+            <span class="daily-icon" aria-hidden="true">✳</span
+            ><span
+              ><strong>DAILY MIX</strong
+              ><small id="daily-summary"
+                >Loading today's challenge...</small
+              ></span
+            ><span class="daily-arrow" aria-hidden="true">↗</span>
+          </button>
+        </section>
+
+        <section class="score-strip" aria-label="Your typing stats">
+          <div class="score-stat">
+            <span class="stat-label">PERSONAL BEST</span
+            ><span class="stat-main"
+              ><strong id="best-wpm">--</strong><small>WPM</small></span
+            ><span class="stat-detail" id="best-detail"
+              >Your next high score is waiting</span
+            >
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="score-stat">
+            <span class="stat-label">LAST SET</span
+            ><span class="stat-main"
+              ><strong id="last-wpm">--</strong><small>WPM</small></span
+            ><span class="stat-detail" id="last-detail"
+              >Play a round to set your pace</span
+            >
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="score-stat">
+            <span class="stat-label">TOTAL SETS</span
+            ><span class="stat-main"
+              ><strong id="total-sets">0</strong><small>RUNS</small></span
+            ><span class="stat-detail" id="sets-detail"
+              >Your progress lives here</span
+            >
+          </div>
+          <div class="score-callout">
+            <span class="callout-star" aria-hidden="true">✳</span
+            ><span
+              ><strong>NO MISS, ALL FLOW</strong
+              ><small>Build a streak. Beat your best.</small></span
+            >
+          </div>
+        </section>
+
+        <section
+          class="progression-strip"
+          id="progression-strip"
+          aria-label="Player level progress"
+          hidden
+        >
+          <div class="progression-rank">
+            <span class="stat-label">PLAYER LEVEL</span>
+            <strong>LV <span id="player-level">1</span></strong>
+            <span class="progression-title" id="player-title"
+              >BEDROOM BEGINNER</span
+            >
+          </div>
+          <div class="progression-meter">
+            <span class="progression-meter-label" id="level-progress-label"
+              >0 / 100 XP TO NEXT LEVEL</span
+            >
+            <div
+              class="xp-track"
+              id="level-progress"
+              role="progressbar"
+              aria-label="XP progress to next level"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <span class="xp-fill" id="level-progress-fill"></span>
+            </div>
+          </div>
+          <div class="progression-total">
+            <strong id="total-xp">0</strong>
+            <small>TOTAL XP</small>
+          </div>
+        </section>
+
+        <div class="mode-switch" role="group" aria-label="Game mode">
+          <button
+            class="mode-option is-selected"
+            id="open-mic-mode"
+            type="button"
+            aria-pressed="true"
+          >
+            <strong>OPEN MIC</strong>
+            <span>FREE PLAY</span>
+          </button>
+          <button
+            class="mode-option"
+            id="career-mode"
+            type="button"
+            aria-pressed="false"
+          >
+            <strong>CAREER</strong>
+            <span>LEVELS &amp; XP</span>
+          </button>
+        </div>
+
+        <section class="play-layout" aria-label="Choose a difficulty and play">
+          <div class="side-column">
+            <section
+              class="panel difficulty-panel"
+              id="difficulty-panel"
+              aria-labelledby="difficulty-title"
+            >
+              <div class="panel-heading">
+                <span class="panel-index">01</span>
+                <h2 id="difficulty-title">CHOOSE YOUR LEVEL</h2>
+              </div>
+              <div class="difficulty-list" role="group" aria-label="Difficulty">
+                <button
+                  class="difficulty-option is-selected"
+                  type="button"
+                  data-difficulty="easy"
+                  aria-pressed="true"
+                >
+                  <span class="difficulty-symbol easy-symbol" aria-hidden="true"
+                    >●</span
+                  ><span class="difficulty-copy"
+                    ><strong>WARM UP</strong
+                    ><small>4-6 letters / 88 BPM</small></span
+                  ><span class="difficulty-check" aria-hidden="true">✓</span>
+                </button>
+                <button
+                  class="difficulty-option"
+                  type="button"
+                  data-difficulty="medium"
+                  aria-pressed="false"
+                >
+                  <span
+                    class="difficulty-symbol medium-symbol"
+                    aria-hidden="true"
+                    >◆</span
+                  ><span class="difficulty-copy"
+                    ><strong>HEADLINER</strong
+                    ><small>7-10 letters / 112 BPM</small></span
+                  ><span class="difficulty-check" aria-hidden="true">✓</span>
+                </button>
+                <button
+                  class="difficulty-option"
+                  type="button"
+                  data-difficulty="hard"
+                  aria-pressed="false"
+                >
+                  <span class="difficulty-symbol hard-symbol" aria-hidden="true"
+                    >★</span
+                  ><span class="difficulty-copy"
+                    ><strong>ENCORE</strong
+                    ><small>12-15 letters / 136 BPM</small></span
+                  ><span class="difficulty-check" aria-hidden="true">✓</span>
+                </button>
+              </div>
+              <div class="difficulty-foot">
+                <span class="pulse-bars" aria-hidden="true"
+                  ><i></i><i></i><i></i><i></i></span
+                ><span id="difficulty-summary"
+                  >A laid-back set to find your rhythm.</span
+                >
+              </div>
+            </section>
+
+            <section
+              class="panel career-panel"
+              id="career-panel"
+              aria-labelledby="career-panel-title"
+              hidden
+            >
+              <div class="panel-heading">
+                <span class="panel-index">02</span>
+                <h2 id="career-panel-title">CAREER ROUTE</h2>
+              </div>
+              <div class="career-rank">
+                <strong id="career-level">LEVEL 1</strong>
+                <span id="career-title">BEDROOM BEGINNER</span>
+              </div>
+              <div class="career-next-set">
+                <span class="stat-label">NEXT CAREER SET</span>
+                <strong id="career-difficulty">WARM UP</strong>
+                <small id="career-difficulty-detail"
+                  >88 BPM · 8.5s per word</small
+                >
+              </div>
+              <p class="career-description">
+                Complete Career sets to earn XP. New difficulty tiers unlock as
+                you level up.
+              </p>
+            </section>
+
+            <section class="panel tip-panel" aria-label="Typing tip">
+              <span class="tip-icon" aria-hidden="true">✦</span>
+              <div>
+                <p class="tip-kicker">A NOTE FROM THE COACH</p>
+                <p id="coach-tip">Accuracy first. Speed follows.</p>
+              </div>
+              <span class="tip-number" id="tip-number">TIP 01</span>
+            </section>
+          </div>
+
+          <section
+            class="game-panel"
+            id="game-panel"
+            aria-labelledby="game-title"
+          >
+            <div class="stage-atmosphere" aria-hidden="true"></div>
+            <div class="game-topline">
+              <div class="game-title-group">
+                <span class="game-live-dot" id="game-live-dot"></span>
+                <div>
+                  <h2 id="game-title">OPEN MIC</h2>
+                  <p id="game-subtitle">YOUR SET IS READY WHEN YOU ARE</p>
+                </div>
+              </div>
+              <div class="song-meta">
+                <span class="song-tag" id="song-difficulty">WARM UP</span
+                ><span class="song-divider">/</span><span>60 SEC SET</span>
+              </div>
+            </div>
+
+            <div class="highway-wrap" id="highway-wrap">
+              <div class="highway-sheen" aria-hidden="true"></div>
+              <div
+                class="highway"
+                id="highway"
+                aria-label="Typing word highway"
+              >
+                <div class="lane lane-0" data-lane="0">
+                  <span class="lane-rail"></span>
+                </div>
+                <div class="lane lane-1" data-lane="1">
+                  <span class="lane-rail"></span>
+                </div>
+                <div class="lane lane-2" data-lane="2">
+                  <span class="lane-rail"></span>
+                </div>
+                <div class="lane lane-3" data-lane="3">
+                  <span class="lane-rail"></span>
+                </div>
+                <div class="target-line" aria-hidden="true">
+                  <span>TYPE ZONE</span>
+                </div>
+                <div class="hit-flash" id="hit-flash" aria-hidden="true"></div>
+              </div>
+              <div class="highway-instruction" id="highway-instruction">
+                HIT PLAY TO START YOUR SET
+              </div>
+            </div>
+
+            <div class="typing-area">
+              <div class="typing-prompt">
+                <span class="prompt-label" id="prompt-label">UP NEXT</span
+                ><span class="prompt-word" id="prompt-word">READY?</span>
+              </div>
+              <label class="typing-input-wrap" for="typing-input"
+                ><span class="input-cursor" aria-hidden="true">›</span
+                ><input
+                  id="typing-input"
+                  type="text"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  maxlength="24"
+                  placeholder="type the word here"
+                  disabled
+                  aria-label="Type the word shown above"
+                  aria-describedby="keyboard-visualization"
+                /><span class="input-hint" id="input-hint"
+                  >WAITING FOR THE DOWNBEAT</span
+                ></label
+              >
+            </div>
+
+            <div
+              class="keyboard-visualization"
+              id="keyboard-visualization"
+              role="img"
+              aria-label="On-screen keyboard. The glowing key indicates the next required letter."
+            >
+              <div class="keyboard-row">
+                <span class="keyboard-key" data-key="q">Q</span>
+                <span class="keyboard-key" data-key="w">W</span>
+                <span class="keyboard-key" data-key="e">E</span>
+                <span class="keyboard-key" data-key="r">R</span>
+                <span class="keyboard-key" data-key="t">T</span>
+                <span class="keyboard-key" data-key="y">Y</span>
+                <span class="keyboard-key" data-key="u">U</span>
+                <span class="keyboard-key" data-key="i">I</span>
+                <span class="keyboard-key" data-key="o">O</span>
+                <span class="keyboard-key" data-key="p">P</span>
+              </div>
+              <div class="keyboard-row keyboard-row-middle">
+                <span class="keyboard-key" data-key="a">A</span>
+                <span class="keyboard-key" data-key="s">S</span>
+                <span class="keyboard-key" data-key="d">D</span>
+                <span class="keyboard-key" data-key="f">F</span>
+                <span class="keyboard-key" data-key="g">G</span>
+                <span class="keyboard-key" data-key="h">H</span>
+                <span class="keyboard-key" data-key="j">J</span>
+                <span class="keyboard-key" data-key="k">K</span>
+                <span class="keyboard-key" data-key="l">L</span>
+              </div>
+              <div class="keyboard-row">
+                <span class="keyboard-key" data-key="z">Z</span>
+                <span class="keyboard-key" data-key="x">X</span>
+                <span class="keyboard-key" data-key="c">C</span>
+                <span class="keyboard-key" data-key="v">V</span>
+                <span class="keyboard-key" data-key="b">B</span>
+                <span class="keyboard-key" data-key="n">N</span>
+                <span class="keyboard-key" data-key="m">M</span>
+              </div>
+              <div class="keyboard-row keyboard-row-bottom">
+                <span class="keyboard-key keyboard-key-space" data-key="space"
+                  >SPACE</span
+                >
+              </div>
+            </div>
+
+            <div class="game-controls">
+              <div class="round-stats">
+                <div>
+                  <span class="round-stat-label">SCORE</span
+                  ><strong id="score-value">000000</strong>
+                </div>
+                <span class="round-stat-divider"></span>
+                <div>
+                  <span class="round-stat-label">WPM</span
+                  ><strong id="live-wpm">0</strong>
+                </div>
+                <span class="round-stat-divider"></span>
+                <div>
+                  <span class="round-stat-label">STREAK</span
+                  ><strong class="streak-value"
+                    ><span id="streak-value">0</span><small>×</small></strong
+                  >
+                </div>
+                <span class="round-stat-divider"></span>
+                <div class="timer-box">
+                  <span class="round-stat-label">TIME</span
+                  ><strong id="timer-value">01:00</strong>
+                </div>
+              </div>
+              <div class="game-actions">
+                <button
+                  class="restart-button"
+                  id="restart-button"
+                  type="button"
+                  aria-label="Restart current set"
+                  title="Restart current set"
+                  disabled
+                >
+                  <span aria-hidden="true">↻</span>
+                </button>
+                <button class="play-button" id="play-button" type="button">
+                  <span class="play-icon" aria-hidden="true">▶</span
+                  ><span id="play-button-label">START SET</span>
+                </button>
+              </div>
+            </div>
+            <div class="game-bottomline">
+              <span
+                ><kbd>TYPE</kbd> word to score
+                <span class="bottom-separator">·</span>
+                <kbd>ENTER</kbd> skip</span
+              ><label class="sound-toggle" title="Toggle music and crowd sounds"
+                ><input
+                  id="sound-toggle"
+                  type="checkbox"
+                  aria-label="Enable music and crowd sounds"
+                  checked
+                /><span class="sound-switch" aria-hidden="true"><i></i></span
+                ><span>SOUND</span></label
+              ><span class="accuracy-readout"
+                >ACCURACY <strong id="accuracy-value">100%</strong></span
+              >
+            </div>
+          </section>
+        </section>
+
+        <section class="history-row" aria-label="Recent session history">
+          <div class="history-title">
+            <span class="history-mark" aria-hidden="true">↗</span
+            ><span
+              ><strong>THE SETLIST</strong><small>YOUR RECENT RUNS</small></span
+            >
+          </div>
+          <div class="history-list" id="history-list">
+            <p class="history-empty">Your first set is one song away.</p>
+          </div>
+          <button
+            class="history-more"
+            id="history-more"
+            type="button"
+            aria-label="Edit profile and view all history"
+          >
+            PROFILE <span aria-hidden="true">↗</span>
+          </button>
+        </section>
+
+        <details class="performance-dashboard" id="performance-dashboard">
+          <summary>
+            <span class="performance-summary-copy">
+              <strong>PLAYER PERFORMANCE</strong>
+              <small>ALL MODES · PERSONAL TRENDS</small>
+            </span>
+            <span class="performance-summary-action">OPEN DASHBOARD</span>
+          </summary>
+          <div class="performance-content">
+            <div class="performance-overview" aria-label="Lifetime performance">
+              <div class="performance-metric">
+                <span>AVERAGE WPM</span><strong id="average-wpm">--</strong>
+              </div>
+              <div class="performance-metric">
+                <span>AVERAGE ACCURACY</span
+                ><strong id="average-accuracy">--</strong>
+              </div>
+              <div class="performance-metric">
+                <span>COMPLETED SETS</span
+                ><strong id="performance-rounds">0</strong>
+              </div>
+              <div class="performance-metric">
+                <span>LONGEST STREAK</span
+                ><strong id="longest-streak">0</strong>
+              </div>
+            </div>
+            <div class="performance-lower">
+              <section
+                class="difficulty-bests"
+                aria-labelledby="difficulty-bests-title"
+              >
+                <h3 id="difficulty-bests-title">PERSONAL BEST BY DIFFICULTY</h3>
+                <div class="difficulty-best-row">
+                  <span>WARM UP</span><strong id="best-wpm-easy">--</strong
+                  ><small>WPM</small>
+                </div>
+                <div class="difficulty-best-row">
+                  <span>HEADLINER</span><strong id="best-wpm-medium">--</strong
+                  ><small>WPM</small>
+                </div>
+                <div class="difficulty-best-row">
+                  <span>ENCORE</span><strong id="best-wpm-hard">--</strong
+                  ><small>WPM</small>
+                </div>
+              </section>
+              <section
+                class="performance-trends"
+                aria-labelledby="performance-trends-title"
+              >
+                <div class="performance-trend-heading">
+                  <h3 id="performance-trends-title">RECENT TREND</h3>
+                  <div
+                    class="performance-periods"
+                    role="group"
+                    aria-label="Trend period"
+                  >
+                    <button
+                      class="performance-period is-selected"
+                      type="button"
+                      data-days="7"
+                      aria-pressed="true"
+                    >
+                      7 DAYS
+                    </button>
+                    <button
+                      class="performance-period"
+                      type="button"
+                      data-days="30"
+                      aria-pressed="false"
+                    >
+                      30 DAYS
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="performance-chart"
+                  id="performance-chart"
+                  role="img"
+                  aria-label="Daily average words per minute over the last 7 days"
+                ></div>
+                <p class="trend-range" id="trend-range">
+                  0 SETS THIS PERIOD · 0 PREVIOUS
+                </p>
+                <p class="trend-comparison" id="trend-comparison">
+                  Complete a set to start your trend.
+                </p>
+              </section>
+            </div>
+          </div>
+        </details>
+
+        <footer class="page-footer">
+          <span>GOOD HANDS. GOOD HABITS. GREAT MUSIC.</span
+          ><span
+            >TYPING HERO <span class="footer-dot">●</span> BUILT ONE WORD AT A
+            TIME</span
+          >
+        </footer>
+      </main>
+    </div>
+
+    <dialog
+      class="profile-dialog"
+      id="profile-dialog"
+      aria-labelledby="profile-dialog-title"
+    >
+      <form id="profile-form" method="dialog">
+        <button
+          class="dialog-close"
+          type="button"
+          id="dialog-close"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <p class="eyebrow">
+          <span class="eyebrow-line"></span> YOUR PLAYER CARD
+        </p>
+        <h2 id="profile-dialog-title">TAKE THE <span>STAGE.</span></h2>
+        <p class="dialog-copy">
+          Pick a stage name and your best runs will be right here next time.
+        </p>
+        <label class="profile-label" for="profile-name">STAGE NAME</label>
+        <input
+          class="profile-name-input"
+          id="profile-name"
+          type="text"
+          maxlength="18"
+          autocomplete="nickname"
+          placeholder="e.g. Alex"
+          required
+        />
+        <button class="dialog-submit" type="submit">
+          SAVE PLAYER CARD <span aria-hidden="true">↗</span>
+        </button>
+        <p class="privacy-note">Saved on this device. No password needed.</p>
+      </form>
+      <section
+        class="achievement-section"
+        aria-labelledby="achievement-heading"
+      >
+        <div class="achievement-heading">
+          <h3 id="achievement-heading">ACHIEVEMENTS</h3>
+          <span id="achievement-summary">0 / 8 UNLOCKED</span>
+        </div>
+        <div
+          class="achievement-list"
+          id="achievement-list"
+          role="list"
+          aria-label="Achievements and unlock status"
+        ></div>
+      </section>
+    </dialog>
+
+    <dialog
+      class="daily-dialog"
+      id="daily-dialog"
+      aria-labelledby="daily-dialog-title"
+    >
+      <div class="daily-content">
+        <button
+          class="dialog-close"
+          type="button"
+          id="daily-close"
+          aria-label="Close daily challenge"
+        >
+          ×
+        </button>
+        <p class="eyebrow">
+          <span class="eyebrow-line"></span> CAREER DAILY MIX · UTC
+        </p>
+        <h2 id="daily-dialog-title">TODAY'S <span>CHALLENGE.</span></h2>
+        <p class="daily-challenge-title" id="daily-title">
+          Loading challenge...
+        </p>
+        <p class="daily-requirement" id="daily-requirement"></p>
+        <div class="daily-progress-block">
+          <div class="daily-progress-meta">
+            <span id="daily-progress-label">0 / 1</span>
+            <strong id="daily-reward">+0 XP</strong>
+          </div>
+          <div
+            class="xp-track"
+            id="daily-progress"
+            role="progressbar"
+            aria-label="Daily challenge progress"
+            aria-valuemin="0"
+            aria-valuemax="1"
+            aria-valuenow="0"
+          >
+            <span class="xp-fill" id="daily-progress-fill"></span>
+          </div>
+        </div>
+        <p class="daily-countdown" id="daily-countdown">NEXT MIX IN --</p>
+        <button class="dialog-submit" id="daily-play-career" type="button">
+          START CAREER SET <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </dialog>
+
+    <dialog
+      class="results-dialog"
+      id="results-dialog"
+      aria-labelledby="results-title"
+    >
+      <div class="results-content">
+        <button
+          class="dialog-close"
+          type="button"
+          id="results-close"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <p class="eyebrow">
+          <span class="eyebrow-line"></span>
+          <span id="result-mode">OPEN MIC SET COMPLETE</span>
+        </p>
+        <h2 id="results-title">THAT'S A <span>WRAP.</span></h2>
+        <div class="result-score">
+          <span class="result-score-label">FINAL SCORE</span>
+          <strong class="result-score-primary" id="result-score-primary"
+            >0</strong
+          >
+          <span class="result-wpm-line"
+            ><strong id="result-wpm">0</strong><span>WPM</span></span
+          >
+        </div>
+        <div class="result-details">
+          <div>
+            <strong id="result-accuracy">100%</strong><span>ACCURACY</span>
+          </div>
+          <div>
+            <strong id="result-best-streak">0</strong><span>BEST STREAK</span>
+          </div>
+          <div>
+            <strong id="result-best">--</strong><span>PERSONAL BEST</span>
+          </div>
+        </div>
+        <div class="personal-best-notice" id="personal-best-notice" hidden>
+          <span aria-hidden="true">✦</span> NEW PERSONAL BEST
+        </div>
+        <div class="result-progression">
+          <div class="result-xp-earned">
+            <span id="result-xp-label">OPEN MIC XP</span>
+            <strong>+<span id="result-xp-earned">0</span></strong>
+          </div>
+          <div class="result-level-info">
+            <div class="result-level-meta">
+              <strong id="result-level">LEVEL 1 · BEDROOM BEGINNER</strong>
+              <span id="result-total-xp">0 XP TOTAL</span>
+            </div>
+            <div
+              class="xp-track"
+              id="result-level-progress"
+              role="progressbar"
+              aria-label="XP progress to next level"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <span class="xp-fill" id="result-level-fill"></span>
+            </div>
+            <small id="result-level-progress-label"
+              >0 / 100 XP TO NEXT LEVEL</small
+            >
+          </div>
+        </div>
+        <div class="level-up-notice" id="level-up-notice" role="status" hidden>
+          <span>LEVEL UP</span>
+          <strong id="level-up-title"></strong>
+        </div>
+        <div class="daily-result" id="daily-result" hidden>
+          <strong>DAILY MIX</strong>
+          <span id="daily-result-copy"></span>
+        </div>
+        <section
+          class="achievement-unlocks"
+          id="achievement-unlocks"
+          aria-label="New achievements unlocked"
+          hidden
+        >
+          <strong>NEW BADGE UNLOCKED</strong>
+          <ul id="achievement-unlock-list"></ul>
+        </section>
+        <p class="result-note" id="result-note">
+          Every set makes the next one smoother.
+        </p>
+        <div class="results-actions">
+          <button class="dialog-submit" id="results-play-again" type="button">
+            PLAY AGAIN <span aria-hidden="true">↗</span>
+          </button>
+          <button class="results-return" id="results-return" type="button">
+            BACK TO STAGE
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <audio id="background-music" preload="none" loop>
+      <source
+        src="https://cdn.pixabay.com/audio/2026/08/29/audio_3a0a0c5449.mp3"
+        type="audio/mpeg"
+      />
+      <source
+        src="assets/audio/jonasblakewood-rock-rock-music-593992.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="results-cheer" preload="auto">
+      <source
+        src="https://cdn.freesound.org/previews/859/859009_14269391-lq.mp3"
+        type="audio/mpeg"
+      />
+      <source src="assets/audio/859009_14269391-lq.mp3" type="audio/mpeg" />
+    </audio>
+  </body>
+</html>
